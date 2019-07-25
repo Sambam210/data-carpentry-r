@@ -1,3 +1,5 @@
+####################################### DAY 1 #######################################
+
 library("tidyverse")
 
 print("Hello, world")
@@ -70,6 +72,24 @@ possessions %in% c("car", "bicycle", "motorcycle", "truck", "boat")
 # can use to subset
 
 possessions[possessions %in% c("car", "bicycle", "motorcycle", "truck", "boat")]
+
+
+##################################### DAY 2 #########################################
+
+# missing data
+
+rooms <- c(2, 1, 1, NA, 4)
+mean(rooms) # doesn't work if there are NAs
+
+mean(rooms, na.rm = TRUE) # works now
+
+is.na(rooms) # checks if anything is an NA
+
+rooms[is.na(rooms) == FALSE] # subset the dataset with NAs removed
+
+# or
+
+rooms[!is.na(rooms)] # selects the vales that are false instead
 
 
 
