@@ -331,13 +331,45 @@ ggplot(interviews_plotting, aes(x = no_membrs, y = number_items)) +
 ggplot(interviews_plotting, aes(x = no_membrs, y = number_items)) +
   geom_point(alpha = 0.5) # add transparency to avoid overlapping
 
-ggplot(data = interviews_plotting, aes(x = no_membrs, y = number_items)) +
+ggplot(interviews_plotting, aes(x = no_membrs, y = number_items)) +
   geom_jitter(alpha = 0.5) # add transparency + randomness to points
 
-ggplot(data = interviews_plotting, aes(x = no_membrs, y = number_items)) +
+ggplot(interviews_plotting, aes(x = no_membrs, y = number_items)) +
   geom_jitter(aes(color = village), alpha = 0.5) # colour by village
 
 # exercise
+ggplot(interviews_plotting, aes(x = village, y = rooms)) +
+  geom_jitter(aes(color = respondent_wall_type))
+
+# boxplots
+ggplot(interviews_plotting, aes(x = respondent_wall_type, y = rooms)) +
+  geom_boxplot()
+
+ggplot(data = interviews_plotting, aes(x = respondent_wall_type, y = rooms)) +
+  geom_boxplot(alpha = 0) +
+  geom_jitter(alpha = 0.5, color = "tomato") # adding points to the boxplot
+
+ggplot(data = interviews_plotting, aes(x = respondent_wall_type, y = rooms)) +
+  geom_violin(alpha = 0) + # create a violin plot instead
+  geom_jitter(alpha = 0.5, color = "tomato") # adding points to the boxplot
+
+# exercise
+ggplot(interviews_plotting, aes(x = respondent_wall_type, y = liv_count)) +
+  geom_jitter(alpha = 0.5, color = "tomato") +
+  geom_boxplot(alpha = 0)
+
+ggplot(interviews_plotting, aes(x = respondent_wall_type, y = liv_count)) +
+  geom_jitter(aes(color = memb_assoc), alpha = 0.5) +
+  geom_boxplot(alpha = 0)
+
+# barplots
+
+ggplot(data = interviews_plotting, aes(x = respondent_wall_type)) +
+  geom_bar()
+
+
+
+
 
 
 
