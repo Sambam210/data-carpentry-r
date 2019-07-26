@@ -27,4 +27,4 @@ rsconnect/
 .Rproj.user
 data/*.csv
 data/*.xlsx
-data_output
+data_output/*.csv
