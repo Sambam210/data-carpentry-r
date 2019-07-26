@@ -359,13 +359,92 @@ ggplot(interviews_plotting, aes(x = respondent_wall_type, y = liv_count)) +
   geom_boxplot(alpha = 0)
 
 ggplot(interviews_plotting, aes(x = respondent_wall_type, y = liv_count)) +
-  geom_jitter(aes(color = memb_assoc), alpha = 0.5) +
+  geom_jitter(aes(color = memb_assoc), alpha = 0.5, height = 0.1) + # height - specify the amount of vertical jitter
   geom_boxplot(alpha = 0)
 
 # barplots
 
 ggplot(data = interviews_plotting, aes(x = respondent_wall_type)) +
   geom_bar()
+
+ggplot(interviews_plotting, aes(x = respondent_wall_type)) +
+  geom_bar(aes(fill = village)) # colour code according to each village
+
+ggplot(interviews_plotting, aes(x = respondent_wall_type)) +
+  geom_bar(aes(fill = village), position = "dodge") # create a side by side bar chart
+
+# look at proportions of wall type within each village
+percent_wall_type <- interviews_plotting %>%
+  filter(respondent_wall_type != "cement") %>% # remove cement as there was only 1
+  count(village, respondent_wall_type) %>%
+  group_by(village) %>%
+  mutate(percent = n / sum(n)) %>%
+  ungroup()
+
+ggplot(percent_wall_type, aes(x = village, y = percent, fill = respondent_wall_type)) +
+  geom_bar(stat = "identity", position = "dodge")
+
+# exercise
+percent_irrigation <- interviews_plotting %>%
+  filter(!is.na(memb_assoc)) %>%
+  count(village, memb_assoc) %>%
+  group_by(village) %>%
+  mutate(percent = n / sum(n)) %>%
+  ungroup()
+
+ggplot(percent_irrigation, aes(x = village, y = percent, fill = memb_assoc)) +
+  geom_bar(stat ="identity", position = "dodge")
+
+# adding labels and titles
+
+ggplot(percent_wall_type, aes(x = village, y = percent, fill = respondent_wall_type)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  ylab("Percent") +
+  xlab("Wall Type") +
+  ggtitle("Proportion of wall type by village")
+
+# facetting
+
+ggplot(percent_wall_type, aes(x = respondent_wall_type, y = percent)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  ylab("Percent") +
+  xlab("Wall Type") +
+  ggtitle("Proportion of wall type by village") +
+  facet_wrap(~village) # create a separate graph for each village
+
+ggplot(percent_wall_type, aes(x = respondent_wall_type, y = percent)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  ylab("Percent") +
+  xlab("Wall Type") +
+  ggtitle("Proportion of wall type by village") +
+  facet_wrap(~ village) +
+  theme_bw() + # use the black and white theme
+  theme(panel.grid = element_blank()) # remove the grid lines
+
+percent_items <- interviews_plotting %>%
+  gather(items, items_owned_logical, bicycle:no_listed_items) %>%
+  filter(items_owned_logical) %>%
+  count(items, village) %>%
+  ## add a column with the number of people in each village
+  mutate(people_in_village = case_when(village == "Chirodzo" ~ 39,
+                                       village == "God" ~ 43,
+                                       village == "Ruaca" ~ 49)) %>% # when village is this, put this value in the new column
+  mutate(percent = n / people_in_village)
+
+ggplot(percent_items, aes(x = village, y = percent)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  facet_wrap(~ items) +
+  theme_bw() +
+  theme(panel.grid = element_blank())
+
+
+
+
+
+
+
+
+
 
 
 
