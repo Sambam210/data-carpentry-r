@@ -79,3 +79,45 @@ as.numeric(year_fct)                     # Wrong! And there is no warning...
 as.numeric(as.character(year_fct))       # Works...
 as.numeric(levels(year_fct))[year_fct]   # The recommended way.
 
+# renaming factors
+
+# pull out the affect conflicts column
+
+affect_conflicts <- interviews$affect_conflicts
+# convert to factor
+affect_conflicts <- as.factor(affect_conflicts)
+affect_conflicts
+levels(affect_conflicts)
+
+# let's plot the data
+plot(affect_conflicts)
+
+# let's replace the NAs with a value
+# recall the column as a vector
+affect_conflicts <- interviews$affect_conflicts
+# replace the NAs with "undetermined"
+affect_conflicts[is.na(affect_conflicts)] <- "undetermined"
+# convert to factor
+affect_conflicts <- as.factor(affect_conflicts)
+# plot the data
+plot(affect_conflicts)
+
+# exercise
+# rename the factor level more_once to once more
+
+levels(affect_conflicts) # more_once is the 2nd factor
+levels(affect_conflicts)[2] <- "more than once"
+levels(affect_conflicts)
+
+# reorder the factors from least to most frequency
+
+affect_conflicts <- factor(affect_conflicts, levels = c("never", "once", "more than once", "frequently", "undetermined"))
+levels(affect_conflicts)
+plot(affect_conflicts)
+
+
+
+
+
+
+
