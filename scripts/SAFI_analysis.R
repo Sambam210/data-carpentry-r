@@ -245,6 +245,101 @@ interviews %>%
   group_by(year, month) %>%
   summarise(largest = max(no_membrs))
 
+# reshaping with gather and spread
+
+# spread
+interviews_spread <- interviews %>%
+  mutate(wall_type_logical = TRUE) %>%
+  spread(key = respondent_wall_type, value = wall_type_logical, fill = FALSE)
+
+# gather
+interviews_gather <- interviews_spread %>%
+  gather(key = respondent_wall_type, value = "wall_type_logical",
+         burntbricks:sunbricks)
+
+interviews_gather <- interviews_spread %>%
+  gather(key = "respondent_wall_type", value = "wall_type_logical",
+         burntbricks:sunbricks) %>%
+  filter(wall_type_logical) %>%
+  select(-wall_type_logical)
+
+# applying spread() to clean data
+# separate the items owned column into separate columns
+
+interviews_items_owned <- interviews %>%
+  mutate(split_items = strsplit(items_owned, ";")) %>% # split the column based on the presence of ; - stores column as a list
+  unnest() %>% # long format version of the dataset
+  mutate(items_owned_logical = TRUE) %>%
+  spread(key = split_items, value = items_owned_logical, fill = FALSE) # go fromlong to wide format, fills with true or false
+
+interviews_items_owned <- interviews_items_owned %>%
+  rename(no_listed_items = `<NA>`) # rename the NA column
+
+# no.of respondants in each village who owned a particular item
+interviews_items_owned %>%
+  filter(bicycle) %>%
+  group_by(village) %>%
+  count(bicycle)
+
+# average number of items owned by respondants in each village
+interviews_items_owned %>%
+  mutate(number_items = rowSums(select(., bicycle:television))) %>%
+  group_by(village) %>%
+  summarize(mean_items = mean(number_items))
+
+# exercise
+interviews_months_no_food <- interviews %>%
+  mutate(no_food = strsplit(months_lack_food, ';')) %>%
+  unnest() %>%
+  mutate(no_food_logical = TRUE) %>%
+  spread(key = no_food, value = no_food_logical, fill = FALSE)
+
+interviews_months_no_food %>%
+  filter(!is.na(memb_assoc)) %>%
+  mutate(no_food_total = rowSums(select(., Apr:Sept))) %>%
+  group_by(memb_assoc) %>%
+  summarise(average_no_food = mean(no_food_total))
+
+# exporting data
+interviews_plotting <- interviews %>%
+  ## spread data by items_owned
+  mutate(split_items = strsplit(items_owned, ";")) %>%
+  unnest() %>%
+  mutate(items_owned_logical = TRUE) %>%
+  spread(key = split_items, value = items_owned_logical, fill = FALSE) %>%
+  rename(no_listed_items = `<NA>`) %>%
+  ## spread data by months_lack_food
+  mutate(split_months = strsplit(months_lack_food, ";")) %>%
+  unnest() %>%
+  mutate(months_lack_food_logical = TRUE) %>%
+  spread(key = split_months, value = months_lack_food_logical, fill = FALSE) %>%
+  ## add some summary columns
+  mutate(number_months_lack_food = rowSums(select(., Apr:Sept))) %>%
+  mutate(number_items = rowSums(select(., bicycle:television)))
+
+write_csv(interviews_plotting, path = "data_output/interviews_plotting.csv")
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
   
 
 
