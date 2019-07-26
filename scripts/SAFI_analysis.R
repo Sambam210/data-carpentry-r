@@ -45,8 +45,37 @@ interviews_100 <- interviews[100,]
 n_rows<-nrow(interviews)
 n_rows
 interviews_last <- interviews[n_rows, ]
-interviews_middle <- interviews[n_rows/2,]
+interviews_middle <- interviews[(n_rows+1)/2,]
 interviews_head <- interviews[-c(7:n_rows),]
 
+# factors
 
+respondent_floor_type <- factor(c("earth", "cement", "cement", "earth"))
+# check the levels of the factor
+levels(respondent_floor_type)
+# number of levels in a factor
+nlevels(respondent_floor_type)
+
+# look at the current order of the factors
+respondent_floor_type # putting cement first because R orders according to alphabetical order
+respondent_floor_type <- factor(respondent_floor_type, levels = c("earth", "cement")) # reordering the factors
+respondent_floor_type # after re-ordering
+
+# let's rename cement as brick
+levels(respondent_floor_type)
+levels(respondent_floor_type)[2] <- "bricks"
+levels(respondent_floor_type)
+respondent_floor_type
+
+# converting factors
+
+# converting factor into a character
+as.character(respondent_floor_type)
+
+# converting factors into numeric
+
+year_fct <- factor(c(1990, 1983, 1977, 1998, 1990))
+as.numeric(year_fct)                     # Wrong! And there is no warning...
+as.numeric(as.character(year_fct))       # Works...
+as.numeric(levels(year_fct))[year_fct]   # The recommended way.
 
