@@ -131,3 +131,161 @@ interviews$month <- month(dates)
 interviews$year <- year(dates)
 interviews
 
+# dplyr and tidyr
+
+## load the tidyverse
+library(tidyverse)
+library(lubridate)
+
+interviews <- read_csv("data/SAFI_clean.csv", na = "NULL")
+
+## inspect the data
+interviews
+
+## preview the data
+View(interviews)
+
+# selecting columns and filtering rows
+select(interviews, village, no_membrs, years_liv)
+
+# choosing rows based on a specific value
+filter(interviews, village == "God")
+
+# pipes
+interviews_god <- interviews %>%
+  filter(village == "God") %>%
+  select(no_membrs, years_liv)
+
+# exercise
+interviews %>%
+  filter(memb_assoc == "yes") %>%
+  select(affect_conflicts, liv_count, no_meals)
+
+# mutate
+interviews %>%
+  mutate(people_per_room = no_membrs / rooms)
+
+# look at effect of being associated with an irrigation assoc. on rooms
+# first need to remove records for which there are NAs for memb_assoc
+
+interviews %>%
+  filter(!is.na(memb_assoc)) %>%
+  mutate(people_per_room = no_membrs/rooms)
+
+# exercise
+interviews %>%
+  mutate(total_meals = no_membrs*no_meals) %>%
+  filter(total_meals > 20) %>%
+  select(village, total_meals)
+
+# spllit, apply, combine, summarise
+
+interviews %>%
+  group_by(village) %>%
+  summarise(mean_no_membrs = mean(no_membrs))
+
+# can group by multiple categories
+interviews %>%
+  group_by(village, memb_assoc) %>%
+  summarize(mean_no_membrs = mean(no_membrs))
+
+# exclude the NAs from memb_assoc
+interviews %>%
+  filter(!is.na(memb_assoc)) %>%
+  group_by(village, memb_assoc) %>%
+  summarize(mean_no_membrs = mean(no_membrs))
+
+# can summarise multiple things
+interviews %>%
+  filter(!is.na(memb_assoc)) %>%
+  group_by(village, memb_assoc) %>%
+  summarize(mean_no_membrs = mean(no_membrs),
+            min_membrs = min(no_membrs))
+
+# can sort results
+interviews %>%
+  filter(!is.na(memb_assoc)) %>%
+  group_by(village, memb_assoc) %>%
+  summarize(mean_no_membrs = mean(no_membrs),
+            min_membrs = min(no_membrs)) %>%
+  arrange(min_membrs)
+
+# sort in descending order
+interviews %>%
+  filter(!is.na(memb_assoc)) %>%
+  group_by(village, memb_assoc) %>%
+  summarize(mean_no_membrs = mean(no_membrs),
+            min_membrs = min(no_membrs)) %>%
+  arrange(desc(min_membrs))
+
+# counting
+
+# count the number of rows for each village
+interviews %>%
+  count(village)
+
+# can also sort the count
+interviews %>%
+  count(village, sort = TRUE)
+
+# exercise
+interviews %>%
+  count(no_meals)
+
+interviews %>%
+  group_by(village) %>%
+  summarise(mean_membrs = mean(no_membrs),
+            min_membrs = min(no_membrs),
+            max_membrs = max(no_membrs),
+            num_obs = n())
+
+interviews %>%
+  mutate(month = month(interview_date),
+         year = year(interview_date)) %>%
+  group_by(year, month) %>%
+  summarise(largest = max(no_membrs))
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
