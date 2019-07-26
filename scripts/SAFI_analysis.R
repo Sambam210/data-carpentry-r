@@ -76,7 +76,7 @@ as.character(respondent_floor_type)
 
 year_fct <- factor(c(1990, 1983, 1977, 1998, 1990))
 as.numeric(year_fct)                     # Wrong! And there is no warning...
-as.numeric(as.character(year_fct))       # Works...
+as.numeric(as.character(year_fct))       # Works...(convert tocharacter first)
 as.numeric(levels(year_fct))[year_fct]   # The recommended way.
 
 # renaming factors
@@ -115,9 +115,19 @@ affect_conflicts <- factor(affect_conflicts, levels = c("never", "once", "more t
 levels(affect_conflicts)
 plot(affect_conflicts)
 
+# formatting dates
 
+str(interviews)
 
+library(lubridate)
 
+dates <- interviews$interview_date
+str(dates)
 
+# extract the date info and store them as separate column in the dataset
 
+interviews$day <- day(dates)
+interviews$month <- month(dates)
+interviews$year <- year(dates)
+interviews
 
