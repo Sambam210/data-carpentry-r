@@ -319,6 +319,28 @@ interviews_plotting <- interviews %>%
 
 write_csv(interviews_plotting, path = "data_output/interviews_plotting.csv")
 
+# data visualisation with ggplot2
+
+library(tidyverse)
+
+interviews_plotting <- read_csv("data_output/interviews_plotting.csv")
+
+ggplot(interviews_plotting, aes(x = no_membrs, y = number_items)) +
+  geom_point()
+
+ggplot(interviews_plotting, aes(x = no_membrs, y = number_items)) +
+  geom_point(alpha = 0.5) # add transparency to avoid overlapping
+
+ggplot(data = interviews_plotting, aes(x = no_membrs, y = number_items)) +
+  geom_jitter(alpha = 0.5) # add transparency + randomness to points
+
+ggplot(data = interviews_plotting, aes(x = no_membrs, y = number_items)) +
+  geom_jitter(aes(color = village), alpha = 0.5) # colour by village
+
+# exercise
+
+
+
 
 
 
